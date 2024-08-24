@@ -37,9 +37,26 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
                 RequirePkce = false,
                 RedirectUris = {"https://localhost:3000/api/auth/callback/id-server"},
-                AllowOfflineAccess = true, // refresh token
+                AllowOfflineAccess = true, // To allow the web client to request a refresh token
                 AllowedScopes = {"openid", "profile", "auctionApp"},
                 AccessTokenLifetime = 3600*24*30
+            },
+            new Client
+            {
+                ClientId = "angular_app",
+                ClientName = "angularApp",
+                AllowedGrantTypes = GrantTypes.Code,
+                RequirePkce = true,
+                RequireClientSecret = false,
+                AllowedCorsOrigins = {"http://localhost:4200"},
+                RedirectUris = { "http://localhost:4200" }, // /callback
+                PostLogoutRedirectUris = { "http://localhost:4200" },
+                AlwaysIncludeUserClaimsInIdToken = true,
+                AllowedScopes = { "openid", "profile", "auctionApp" },
+                AllowOfflineAccess = true, // To allow the web client to request a refresh token
+                RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                RefreshTokenExpiration = TokenExpiration.Sliding,
+                SlidingRefreshTokenLifetime = 86400 // 1 day
             }
         };
 }

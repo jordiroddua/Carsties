@@ -56,8 +56,9 @@ public class AuctionsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<AuctionDto>> CreateAuction(CreateAuctionDto auctionDto)
     {
+        Console.WriteLine("-----> POST Auction");
         var auction = _mapper.Map<Auction>(auctionDto);
-        //TODO: add current user as seller
+        
         auction.Seller = User.Identity.Name;
 
         _context.Auctions.Add(auction);

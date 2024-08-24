@@ -23,6 +23,13 @@ builder.Services.AddMassTransit(x => {
     // add retry policy to retreive lost messages while DB was down
     x.UsingRabbitMq((context, cfg) => 
     {
+        // needed for local development whne not using docker compose
+        cfg.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
+        {
+            host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
+            host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
+        });
+
         cfg.ReceiveEndpoint("search-auction-created", e => {
             e.UseMessageRetry(r => r.Interval(5, 5));
             e.ConfigureConsumer<AuctionCreatedConsumer>(context);

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
+var  CarsitesAllowSpecificOrigins = "_carsitesAllowSpecificOrigins";
 
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
@@ -17,7 +18,30 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters.NameClaimType = "username";
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: CarsitesAllowSpecificOrigins,
+                      policy  =>
+                      {
+                          policy.WithOrigins("http://localhost:4200");
+                          policy.WithHeaders("authorization", "content-type");
+                          policy.AllowAnyMethod();
+                      });
+});
+// builder.Services.AddCors(options =>
+// {
+//     options.AddDefaultPolicy(
+//         policy =>
+//         {
+//             policy.WithOrigins(
+//                 "http://localhost:4200"
+//             );
+//         });
+// });
+
 var app = builder.Build();
+
+app.UseCors(CarsitesAllowSpecificOrigins);
 
 app.MapReverseProxy();
 

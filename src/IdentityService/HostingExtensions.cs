@@ -1,4 +1,5 @@
 using Duende.IdentityServer;
+using Duende.IdentityServer.Services;
 using IdentityService.Data;
 using IdentityService.Models;
 using Microsoft.AspNetCore.Identity;
@@ -28,6 +29,12 @@ internal static class HostingExtensions
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
 
+                if(builder.Environment.IsEnvironment("Docker"))
+                {
+                    // add identity-svc as the issuer when issuing tokens 
+                    options.IssuerUri = "identity-svc";
+                }
+
                 // see https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/
                 // options.EmitStaticAudienceClaim = true;
             })
@@ -41,6 +48,17 @@ internal static class HostingExtensions
         builder.Services.ConfigureApplicationCookie(options => {
             options.Cookie.SameSite = SameSiteMode.Lax;
         });
+
+        // builder.Services.AddSingleton<ICorsPolicyService>((container) =>
+        // {
+        //     var logger = container.GetRequiredService<ILogger<DefaultCorsPolicyService>>();
+
+        //     return new DefaultCorsPolicyService(logger) 
+        //     {
+        //         AllowedOrigins = { "http://localhost:4200/"}
+        //     };
+        // });
+
         
         builder.Services.AddAuthentication();
 
