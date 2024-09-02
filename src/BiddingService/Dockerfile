@@ -17,12 +17,13 @@ RUN dotnet restore Carsties.sln
 
 # copy the app folders
 # publish it into the /app/src/out folder
-COPY src/IdentityService src/IdentityService
-WORKDIR /app/src/IdentityService
+COPY src/BiddingService src/BiddingService
+COPY src/Contracts src/Contracts
+WORKDIR /app/src/BiddingService
 RUN dotnet publish -c Release -o /app/src/out
 
 # Build runtime image with a lighter version of the dotnet sdk
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/src/out .
-ENTRYPOINT [ "dotnet", "IdentityService.dll" ]
+ENTRYPOINT [ "dotnet", "BiddingService.dll" ]
