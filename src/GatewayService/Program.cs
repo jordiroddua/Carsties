@@ -23,21 +23,13 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: CarsitesAllowSpecificOrigins,
                       policy  =>
                       {
-                          policy.WithOrigins("http://localhost:4200");
+                          policy.WithOrigins(builder.Configuration["ClientApp"]);
                           policy.WithHeaders("authorization", "content-type");
                           policy.AllowAnyMethod();
+                          //policy.AllowAnyHeader; test for signalR
+                          //policy.AllowCredentials; test for signalR
                       });
 });
-// builder.Services.AddCors(options =>
-// {
-//     options.AddDefaultPolicy(
-//         policy =>
-//         {
-//             policy.WithOrigins(
-//                 "http://localhost:4200"
-//             );
-//         });
-// });
 
 var app = builder.Build();
 
