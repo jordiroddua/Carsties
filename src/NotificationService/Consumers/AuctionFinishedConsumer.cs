@@ -20,6 +20,6 @@ public class AuctionFinishedConsumer : IConsumer<AuctionFinished>
     {
         Console.WriteLine("==> auction finished message received");
 
-        await _hubContext.Clients.All.SendAsync("AuctionCreated", context.Message);
+        await _hubContext.Clients.All.SendAsync("AuctionFinished", context.Message);
     }
 }

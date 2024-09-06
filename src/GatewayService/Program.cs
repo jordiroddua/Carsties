@@ -24,10 +24,10 @@ builder.Services.AddCors(options =>
                       policy  =>
                       {
                           policy.WithOrigins(builder.Configuration["ClientApp"]);
-                          policy.WithHeaders("authorization", "content-type");
                           policy.AllowAnyMethod();
-                          //policy.AllowAnyHeader; test for signalR
-                          //policy.AllowCredentials; test for signalR
+                          policy.AllowAnyHeader();
+                          policy.AllowCredentials();
+                        //   policy.WithHeaders("authorization", "content-type");
                       });
 });
 
